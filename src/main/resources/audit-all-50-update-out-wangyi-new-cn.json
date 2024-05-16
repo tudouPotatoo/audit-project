@@ -1,0 +1,30 @@
+{
+    "auditItems": [
+        {
+            "auditItem": "处理个人信息合法性基础",
+            "auditSubItem": "取得个人同意",
+            "auditSubStatus": 1,
+            "auditSubThreshold": 0.7,
+            "auditSubScore": 0.8525984287261963,
+            "auditData": [
+                {
+                    "auditDataKey": "隐私声明文本",
+                    "auditDataValue": "如您发现账号、密码及/或其他身份要素可能或已经泄露时，请您立即和我们取得联系，以便我们及时采取相应措施以避免或降低相关损失"
+                }
+            ]
+        },
+        {
+            "auditItem": "处理个人信息合法性基础",
+            "auditSubItem": "重新取得个人同意",
+            "auditSubStatus": 0,
+            "auditSubThreshold": 0.8,
+            "auditSubScore": 0.7756201028823853,
+            "auditData": [
+                {
+                    "auditDataKey": "隐私声明文本",
+                    "auditDataValue": ""
+                }
+            ]
+        }
+    ]
+}
