@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 用户操作日志 Controller层
@@ -14,7 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
  * @version 1.0
  */
 @Slf4j
-@Controller("/userOptLog")
+@Controller
+@RequestMapping("/userOptLog")
 public class UserOperationLogController {
 
     @Autowired
@@ -26,8 +29,8 @@ public class UserOperationLogController {
      * @return
      */
     @PostMapping("/audit/{id}")
+    @ResponseBody
     public Result auditUserOperationLog(@PathVariable int id) {
-        userOptLogService.auditLog(id);
-        return Result.ok();
+        return userOptLogService.auditLog(id);
     }
 }

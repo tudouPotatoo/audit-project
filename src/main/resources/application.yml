@@ -6,14 +6,14 @@ spring:
   datasource:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/springboot_db?serverTimezone=UTC
+      url: jdbc:mysql://localhost:3306/audit_project?serverTimezone=UTC
       username: root
       password: password
 # 配置mybatis-plus
 mybatis-plus:
   global-config:
     db-config:
-      table-prefix: tbl_  # 数据库表前缀
+      table-prefix: tb_  # 数据库表前缀
       id-type: auto   # 配置id自增
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 配置日志输出格式

@@ -45,11 +45,10 @@ public class LogAuditResult {
      * 0-失败（score < threshold）
      * 1-成功（score >= threshold）
      */
-    private Integer result;
+    private Integer status;
 
     /**
      * 审计依据的内容
      */
     private String data;
-
 }
