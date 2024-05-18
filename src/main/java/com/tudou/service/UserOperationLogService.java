@@ -5,6 +5,9 @@ import com.tudou.dto.Result;
 import com.tudou.pojo.UserOperationLog;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.util.List;
+
 /**
  * 用户操作日志 Service层接口
  * @author 赖玉婷
@@ -12,4 +15,5 @@ import org.springframework.stereotype.Service;
  */
 public interface UserOperationLogService extends IService<UserOperationLog> {
     Result auditLog(int id);
+    List<UserOperationLog> readAndCleanJsonFile(String filePath) throws IOException;
 }

@@ -3,14 +3,22 @@ package com.tudou.service.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tudou.dto.Result;
 import com.tudou.mapper.UserOperationLogMapper;
 import com.tudou.pojo.LogAuditResult;
 import com.tudou.pojo.UserOperationLog;
+import com.tudou.repository.UserOperationLogRepository;
 import com.tudou.service.UserOperationLogService;
 import com.tudou.utils.BertUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 用户操作日志 Service层实现类
@@ -22,6 +30,30 @@ public class UserOperationLogServiceImpl extends ServiceImpl<UserOperationLogMap
 
     @Autowired
     private LogAuditResultServiceImpl logAuditResultService;
+    /**
+     *
+     */
+
+    public List<UserOperationLog> readAndCleanJsonFile(String filePath) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<UserOperationLog> userLogs = objectMapper.readValue(new File(filePath), objectMapper.getTypeFactory().constructCollectionType(List.class, UserOperationLog.class));
+
+        // 清洗数据，只保留指定字段
+        List<UserOperationLog> cleanedUserLogs = new ArrayList<>();
+        for (UserOperationLog userLog : userLogs) {
+            UserOperationLog cleanedLog = new UserOperationLog();
+            cleanedLog.setId(userLog.getId());
+            cleanedLog.setUserId(userLog.getUserId());
+            cleanedLog.setMode(userLog.getMode());
+            cleanedLog.setTime(userLog.getTime());
+            cleanedLog.setParentOperation(userLog.getParentOperation());
+            cleanedLog.setOperation(userLog.getOperation());
+            cleanedLog.setInformContent(userLog.getInformContent());
+            cleanedUserLogs.add(cleanedLog);
+        }
+        return cleanedUserLogs;
+    }
+
 
     /**
      * 日志审计

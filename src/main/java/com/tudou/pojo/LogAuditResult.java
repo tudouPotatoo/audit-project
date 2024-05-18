@@ -15,6 +15,70 @@ public class LogAuditResult {
      */
     private Integer id;
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setUserOptLogId(Integer userOptLogId) {
+        this.userOptLogId = userOptLogId;
+    }
+
+    public void setAuditItem(String auditItem) {
+        this.auditItem = auditItem;
+    }
+
+    public void setAuditSubItem(String auditSubItem) {
+        this.auditSubItem = auditSubItem;
+    }
+
+    public void setThreshold(Double threshold) {
+        this.threshold = threshold;
+    }
+
+    public void setScore(Double score) {
+        this.score = score;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
+
+    public Integer getUserOptLogId() {
+        return userOptLogId;
+    }
+
+    public String getAuditItem() {
+        return auditItem;
+    }
+
+    public String getAuditSubItem() {
+        return auditSubItem;
+    }
+
+    public Double getThreshold() {
+        return threshold;
+    }
+
+    public Double getScore() {
+        return score;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public String getData() {
+        return data;
+    }
+
     /**
      * 这条审计结果对应的用户操作日志id
      */
