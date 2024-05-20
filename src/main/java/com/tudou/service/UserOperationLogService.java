@@ -3,9 +3,7 @@ package com.tudou.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.tudou.dto.Result;
 import com.tudou.pojo.UserOperationLog;
-import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -15,5 +13,5 @@ import java.util.List;
  */
 public interface UserOperationLogService extends IService<UserOperationLog> {
     Result auditLog(int id);
-    List<UserOperationLog> readAndCleanJsonFile(String filePath) throws IOException;
+    List<UserOperationLog> readAndCleanJsonFile(String filePath);
 }

@@ -1,22 +1,23 @@
 package com.tudou.service.impl;
 
+import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
 import com.tudou.dto.Result;
 import com.tudou.mapper.UserOperationLogMapper;
 import com.tudou.pojo.LogAuditResult;
 import com.tudou.pojo.UserOperationLog;
-import com.tudou.repository.UserOperationLogRepository;
 import com.tudou.service.UserOperationLogService;
 import com.tudou.utils.BertUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
+import java.io.FileReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,29 +31,75 @@ public class UserOperationLogServiceImpl extends ServiceImpl<UserOperationLogMap
 
     @Autowired
     private LogAuditResultServiceImpl logAuditResultService;
+
     /**
-     *
+     * 1. 读json文件
+     * 2. 将json文件的每一个项转换为jsonObject
+     * 3. 将该项转为一个UserOperationLog对象
+     * 4. 将该对象存入List
+     * @param filePath
+     * @return
      */
+    public List<UserOperationLog> readAndCleanJsonFile(String filePath) {
+        List<UserOperationLog> userOperationLogs = new ArrayList<>();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    public List<UserOperationLog> readAndCleanJsonFile(String filePath) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<UserOperationLog> userLogs = objectMapper.readValue(new File(filePath), objectMapper.getTypeFactory().constructCollectionType(List.class, UserOperationLog.class));
+        // 1. 读json文件
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
 
-        // 清洗数据，只保留指定字段
-        List<UserOperationLog> cleanedUserLogs = new ArrayList<>();
-        for (UserOperationLog userLog : userLogs) {
-            UserOperationLog cleanedLog = new UserOperationLog();
-            cleanedLog.setId(userLog.getId());
-            cleanedLog.setUserId(userLog.getUserId());
-            cleanedLog.setMode(userLog.getMode());
-            cleanedLog.setTime(userLog.getTime());
-            cleanedLog.setParentOperation(userLog.getParentOperation());
-            cleanedLog.setOperation(userLog.getOperation());
-            cleanedLog.setInformContent(userLog.getInformContent());
-            cleanedUserLogs.add(cleanedLog);
+            // 将整个文件内容解析为一个 JSONArray
+            JSONArray jsonArray = JSON.parseArray(sb.toString());
+
+            // 遍历 JSONArray 并将每个项转换为 UserOperationLog 对象
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                UserOperationLog cleanedLog = new UserOperationLog();
+                // cleanedLog.setId((Integer) jsonObject.get("id"));
+                cleanedLog.setUserId((Integer) jsonObject.get("userId"));
+                cleanedLog.setMode((Integer) jsonObject.get("mode"));
+                cleanedLog.setTime(formatter.parse((String) jsonObject.get("time")));
+                cleanedLog.setParentOperation((Integer) jsonObject.get("parentOperation"));
+                cleanedLog.setOperation((Integer) jsonObject.get("operation"));
+                cleanedLog.setInformContent((String) jsonObject.get("informedContent"));
+                userOperationLogs.add(cleanedLog);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return cleanedUserLogs;
+
+        return userOperationLogs;
     }
+    // public List<UserOperationLog> readAndCleanJsonFile(String filePath) {
+    //
+    //     List<UserOperationLog> userLogs = null;
+    //     try {
+    //         ObjectMapper objectMapper = new ObjectMapper();
+    //         CollectionType listType = objectMapper.getTypeFactory().constructCollectionType(List.class, UserOperationLog.class);
+    //         userLogs = objectMapper.readValue(new File(filePath), listType);
+    //     } catch (IOException e) {
+    //         throw new RuntimeException(e);
+    //     }
+    //
+    //     // 清洗数据，只保留指定字段
+    //     List<UserOperationLog> cleanedUserLogs = new ArrayList<>();
+    //     for (UserOperationLog userLog : userLogs) {
+    //         UserOperationLog cleanedLog = new UserOperationLog();
+    //         cleanedLog.setId(userLog.getId());
+    //         cleanedLog.setUserId(userLog.getUserId());
+    //         cleanedLog.setMode(userLog.getMode());
+    //         cleanedLog.setTime(userLog.getTime());
+    //         cleanedLog.setParentOperation(userLog.getParentOperation());
+    //         cleanedLog.setOperation(userLog.getOperation());
+    //         cleanedLog.setInformContent(userLog.getInformContent());
+    //         cleanedUserLogs.add(cleanedLog);
+    //     }
+    //     return cleanedUserLogs;
+    // }
 
 
     /**
